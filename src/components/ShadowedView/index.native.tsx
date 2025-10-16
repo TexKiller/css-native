@@ -1,5 +1,5 @@
 import React from "react";
-import { ViewProps, ViewStyle } from "react-native";
+import { Platform, ViewProps, ViewStyle } from "react-native";
 import { cssToRNStyle } from "rn-css";
 import Component from "./Component";
 
@@ -17,13 +17,29 @@ const ShadowedView = (
   if (shadows.length === 1) {
     Object.assign(
       style,
-      cssToRNStyle(`box-shadow: ${shadows[0]}; shadow-opacity: 1`),
+      cssToRNStyle(
+        `box-shadow: ${shadows[0]}; shadow-opacity: ${
+          Platform.OS === "macos"
+            ? Math.pow(
+                +(/(?<=rgba\(.*,.*,.*,).*(?=\))/g.exec(shadows[0])?.[0] ?? 1),
+                0.5,
+              )
+            : 1
+        }`,
+      ),
     );
     return <Component {...props} />;
   }
   const styles = shadows.map((shadow) =>
     cssToRNStyle(
-      `box-shadow: ${shadow}; shadow-opacity: 1;` +
+      `box-shadow: ${shadow}; shadow-opacity: ${
+        Platform.OS === "macos"
+          ? Math.pow(
+              +(/(?<=rgba\(.*,.*,.*,).*(?=\))/g.exec(shadow)?.[0] ?? 1),
+              0.5,
+            )
+          : 1
+      };` +
         (style.borderTopLeftRadius
           ? ` border-top-left-radius: ${style.borderTopLeftRadius as number};`
           : "") +
