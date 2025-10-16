@@ -20,10 +20,7 @@ const ShadowedView = (
       cssToRNStyle(
         `box-shadow: ${shadows[0]}; shadow-opacity: ${
           Platform.OS === "macos"
-            ? Math.pow(
-                +(/(?<=rgba\(.*,.*,.*,).*(?=\))/g.exec(shadows[0])?.[0] ?? 1),
-                0.5,
-              )
+            ? +(/(?<=rgba\(.*,.*,.*,).*(?=\))/g.exec(shadows[0])?.[0] ?? 1)
             : 1
         }`,
       ),
@@ -34,10 +31,7 @@ const ShadowedView = (
     cssToRNStyle(
       `box-shadow: ${shadow}; shadow-opacity: ${
         Platform.OS === "macos"
-          ? Math.pow(
-              +(/(?<=rgba\(.*,.*,.*,).*(?=\))/g.exec(shadow)?.[0] ?? 1),
-              0.5,
-            )
+          ? +(/(?<=rgba\(.*,.*,.*,).*(?=\))/g.exec(shadow)?.[0] ?? 1)
           : 1
       };` +
         (style.borderTopLeftRadius
