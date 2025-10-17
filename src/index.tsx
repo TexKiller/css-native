@@ -17,6 +17,7 @@ import {
   TouchableOpacity as RNTouchableOpacity,
   TouchableWithoutFeedback as RNTouchableWithoutFeedback,
   View as RNView,
+  ScrollViewProps,
   TextInputProps,
   TextProps,
   TextStyle,
@@ -54,6 +55,11 @@ if (Platform.OS === "web") {
 export { css } from "./utils/css";
 export * from "./utils/cva";
 export { TemplatedParameters } from "./utils/styled";
+
+let NativeScrollView = RNScrollView;
+export function setNativeScrollView(ScrollView: typeof RNScrollView) {
+  NativeScrollView = ScrollView;
+}
 
 function styled<
   C extends React.ComponentType<any>,
@@ -137,7 +143,7 @@ function styled<
     const overflowX = styleEntries.find(([k]) => k === "overflowX");
     if (overflowX) {
       if (overflowX[1] === "scroll") {
-        OriginalComponent = RNScrollView as any;
+        OriginalComponent = NativeScrollView as any;
         (props as any).horizontal = true;
       }
       styleEntries.splice(styleEntries.indexOf(overflowX), 1);
@@ -145,7 +151,7 @@ function styled<
     const overflowY = styleEntries.find(([k]) => k === "overflowY");
     if (overflowY) {
       if (overflowY[1] === "scroll") {
-        OriginalComponent = RNScrollView as any;
+        OriginalComponent = NativeScrollView as any;
         (props as any).horizontal = false;
       }
       styleEntries.splice(styleEntries.indexOf(overflowY), 1);
@@ -372,7 +378,11 @@ styled.Image = styled(RNImage);
 styled.ImageBackground = styled(RNImageBackground);
 styled.KeyboardAvoidingView = styled(RNKeyboardAvoidingView);
 styled.Pressable = styled(RNPressable);
-styled.ScrollView = styled(RNScrollView);
+styled.ScrollView = styled(
+  React.forwardRef<RNScrollView, ScrollViewProps>((props, ref) => {
+    return <NativeScrollView {...props} ref={ref} />;
+  }),
+);
 styled.Switch = styled(RNSwitch);
 styled.RefreshControl = styled(RNRefreshControl);
 styled.SafeAreaView = styled(RNSafeAreaView);
