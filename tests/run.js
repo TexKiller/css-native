@@ -3,7 +3,8 @@ const spawn = require("child_process").spawn;
 const pathResolve = require("path").resolve;
 const existsSync = require("fs").existsSync;
 
-const jest = spawn("yarn", [
+const jest = spawn("node", [
+  ".yarn/releases/yarn-4.1.1.cjs",
   "node",
   "--require",
   existsSync("./tests/stub.js") ? "./tests/stub.js" : "../tests/stub.js",
