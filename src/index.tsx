@@ -142,7 +142,7 @@ function styled<
     );
     const overflowX = styleEntries.find(([k]) => k === "overflowX");
     if (overflowX) {
-      if (overflowX[1] === "scroll") {
+      if (["scroll", "auto"].includes(overflowX[1] as string)) {
         OriginalComponent = NativeScrollView as any;
         (props as any).horizontal = true;
       }
@@ -150,7 +150,7 @@ function styled<
     }
     const overflowY = styleEntries.find(([k]) => k === "overflowY");
     if (overflowY) {
-      if (overflowY[1] === "scroll") {
+      if (["scroll", "auto"].includes(overflowY[1] as string)) {
         OriginalComponent = NativeScrollView as any;
         (props as any).horizontal = false;
       }
