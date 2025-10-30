@@ -42,8 +42,7 @@ if (Platform.OS === "web") {
   const oldCreateElement = React.createElement;
   React.createElement = ((...args: Parameters<typeof React.createElement>) => {
     if (typeof args[0] === "string") {
-      const className =
-        (args[1] as any)?.["data-testid"] || (args[1] as any)?.className || "";
+      const className = (args[1] as any)?.["data-testid"] || "";
       args[1] = { ...(args[1] || {}), className } as any;
       if (!className) {
         delete (args[1] as any).className;
@@ -55,8 +54,7 @@ if (Platform.OS === "web") {
   const oldCloneElement = React.cloneElement;
   React.cloneElement = ((...args: Parameters<typeof React.cloneElement>) => {
     if (typeof args[0] === "string") {
-      const className =
-        (args[1] as any)?.["data-testid"] || (args[1] as any)?.className || "";
+      const className = (args[1] as any)?.["data-testid"] || "";
       args[1] = { ...(args[1] || {}), className } as any;
       if (!className) {
         delete (args[1] as any).className;
@@ -68,8 +66,7 @@ if (Platform.OS === "web") {
   const oldJsx = Jsx.jsx;
   Jsx.jsx = ((...args: Parameters<typeof Jsx.jsx>) => {
     if (typeof args[0] === "string") {
-      const className =
-        (args[1] as any)?.testID || (args[1] as any)?.className || "";
+      const className = (args[1] as any)?.testID || "";
       args[1] = { ...(args[1] || {}), className } as any;
       if (!className) {
         delete (args[1] as any).className;
