@@ -1,4 +1,5 @@
 import React from "react";
+import Jsx from "react/jsx-runtime";
 import {
   Platform,
   ActivityIndicator as RNActivityIndicator,
@@ -41,7 +42,8 @@ if (Platform.OS === "web") {
   const oldCreateElement = React.createElement;
   React.createElement = ((...args: Parameters<typeof React.createElement>) => {
     if (typeof args[0] === "string") {
-      const className = (args[1] as any)?.["data-testid"] || "";
+      const className =
+        (args[1] as any)?.["data-testid"] || (args[1] as any)?.className || "";
       args[1] = { ...(args[1] || {}), className } as any;
       if (!className) {
         delete (args[1] as any).className;
@@ -52,13 +54,29 @@ if (Platform.OS === "web") {
   }) as any;
   const oldCloneElement = React.cloneElement;
   React.cloneElement = ((...args: Parameters<typeof React.cloneElement>) => {
-    const className = (args[1] as any)?.["data-testid"] || "";
-    args[1] = { ...(args[1] || {}), className } as any;
-    if (!className) {
-      delete (args[1] as any).className;
+    if (typeof args[0] === "string") {
+      const className =
+        (args[1] as any)?.["data-testid"] || (args[1] as any)?.className || "";
+      args[1] = { ...(args[1] || {}), className } as any;
+      if (!className) {
+        delete (args[1] as any).className;
+      }
+      delete (args[1] as any)["data-testid"];
     }
-    delete (args[1] as any)["data-testid"];
     return oldCloneElement(...args);
+  }) as any;
+  const oldJsx = Jsx.jsx;
+  Jsx.jsx = ((...args: Parameters<typeof Jsx.jsx>) => {
+    if (typeof args[0] === "string") {
+      const className =
+        (args[1] as any)?.testID || (args[1] as any)?.className || "";
+      args[1] = { ...(args[1] || {}), className } as any;
+      if (!className) {
+        delete (args[1] as any).className;
+      }
+      delete (args[1] as any).testID;
+    }
+    return oldJsx(...args);
   }) as any;
 }
 
